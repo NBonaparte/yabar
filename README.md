@@ -296,7 +296,7 @@ Yabar has a growing set of useful blocks. You can try out the sampe config locat
 
 		exec: "YABAR_BATTERY";
 		internal-option1: "BAT0"; #i.e. Replace NAME with your corresponding name
-		internal-option2: ";  ;  ;  ;  ";
+		internal-option2: " ;   ;   ;   ;  ";
 		internal-suffix: "%";
 		internal-spacing: true;
 

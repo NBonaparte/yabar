@@ -484,8 +484,8 @@ void ya_int_battery(ya_block_t *blk) {
 			strcpy(startstr, bat_75str);
 		else
 			strcpy(startstr, bat_100str);
-		if(stat == 'C' && blk->internal->option[1])
-			strcat(strcat(startstr, " "), bat_chargestr);
+		if((stat == 'C' || stat == 'U') && bat != 100)
+			strcat(startstr, bat_chargestr);
 		sprintf(startstr+strlen(startstr), "%*d", space, bat);
 		if(suflen)
 			strcat(blk->buf, blk->internal->suffix);
