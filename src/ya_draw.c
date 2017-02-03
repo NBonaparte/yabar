@@ -49,7 +49,7 @@ static void ya_setup_ewmh(ya_bar_t *bar) {
 		free(atom_reply);
 	}
 
-	int strut[12];
+	int strut[12] = {0};
 
 	if (bar->position == YA_TOP) {
 		strut[2] = bar->height;
