@@ -72,6 +72,7 @@ static void ya_setup_ewmh(ya_bar_t *bar) {
 	xcb_change_property(ya.c, XCB_PROP_MODE_REPLACE, bar->win, atom_list[NET_WM_STRUT], XCB_ATOM_CARDINAL, 32, 4, strut);
 	xcb_change_property(ya.c, XCB_PROP_MODE_REPLACE, bar->win, XCB_ATOM_WM_NAME, XCB_ATOM_STRING, 8, strlen("yabar"), "yabar");
 
+#ifdef YA_BSPWM
 	// set bspwm windows to be above the bar
 	xcb_query_tree_reply_t *qtree = xcb_query_tree_reply(ya.c, xcb_query_tree(ya.c, ya.scr->root), NULL);
 	if(qtree == NULL)
@@ -91,7 +92,7 @@ static void ya_setup_ewmh(ya_bar_t *bar) {
 	}
 
 	free(qtree);
-
+#endif
 }
 
 /*
