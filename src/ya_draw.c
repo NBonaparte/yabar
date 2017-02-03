@@ -71,6 +71,27 @@ static void ya_setup_ewmh(ya_bar_t *bar) {
 	xcb_change_property(ya.c, XCB_PROP_MODE_REPLACE, bar->win, atom_list[NET_WM_STRUT_PARTIAL], XCB_ATOM_CARDINAL, 32, 12, strut);
 	xcb_change_property(ya.c, XCB_PROP_MODE_REPLACE, bar->win, atom_list[NET_WM_STRUT], XCB_ATOM_CARDINAL, 32, 4, strut);
 	xcb_change_property(ya.c, XCB_PROP_MODE_REPLACE, bar->win, XCB_ATOM_WM_NAME, XCB_ATOM_STRING, 8, strlen("yabar"), "yabar");
+
+	// set bspwm windows to be above the bar
+	xcb_query_tree_reply_t *qtree = xcb_query_tree_reply(ya.c, xcb_query_tree(ya.c, ya.scr->root), NULL);
+	if(qtree == NULL)
+		fprintf(stderr, "Failed to query window tree");
+	xcb_window_t *wins = xcb_query_tree_children(qtree);
+
+	for(int i = 0; i < xcb_query_tree_children_length(qtree); i++) {
+		xcb_window_t found_win = wins[i];
+		// apparently class cannot be a pointer
+		xcb_icccm_get_wm_class_reply_t class;
+		if(xcb_icccm_get_wm_class_reply(ya.c, xcb_icccm_get_wm_class(ya.c, found_win), &class, NULL)) {
+			if(!strcmp("Bspwm", class.class_name) && !strcmp("root", class.instance_name)) {
+				uint32_t stack_mask[2] = {found_win, XCB_STACK_MODE_ABOVE};
+				xcb_configure_window(ya.c, bar->win, XCB_CONFIG_WINDOW_SIBLING | XCB_CONFIG_WINDOW_STACK_MODE, stack_mask);
+			}
+		}
+	}
+
+	free(qtree);
+
 }
 
 /*
